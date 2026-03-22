@@ -26,21 +26,48 @@ Three lines of information at a glance:
 
 ## Installation
 
-### 1. Download the script
+### Quick install (one command)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hugohvf/claude-code-statusline/main/install.sh | bash
+```
+
+This will:
+1. Check that `jq` is installed
+2. Download `statusline.sh` to `~/.claude/statusline.sh`
+3. Patch `~/.claude/settings.json` to enable the statusline
+4. Print confirmation — just restart Claude Code
+
+> **Requires:** `jq` — install with `brew install jq` (macOS) or `sudo apt install jq` (Linux)
+
+---
+
+### Let Claude set it up for you
+
+Already inside a Claude Code session? Paste this prompt and Claude will handle the entire setup:
+
+```
+Please install the statusline from https://github.com/hugohvf/claude-code-statusline for me.
+
+Steps:
+1. Download https://raw.githubusercontent.com/hugohvf/claude-code-statusline/main/statusline.sh to ~/.claude/statusline.sh and make it executable
+2. Open ~/.claude/settings.json and add (or merge) this key:
+   "statusLine": { "type": "command", "command": "~/.claude/statusline.sh" }
+3. Confirm what you changed and tell me to restart Claude Code to activate it
+```
+
+---
+
+### Manual installation
+
+#### 1. Download the script
 
 ```bash
 curl -o ~/.claude/statusline.sh https://raw.githubusercontent.com/hugohvf/claude-code-statusline/main/statusline.sh
 chmod +x ~/.claude/statusline.sh
 ```
 
-Or clone this repo and copy manually:
-
-```bash
-cp statusline.sh ~/.claude/statusline.sh
-chmod +x ~/.claude/statusline.sh
-```
-
-### 2. Configure Claude Code
+#### 2. Configure Claude Code
 
 Add the following to your Claude Code settings (`~/.claude/settings.json`):
 
@@ -55,7 +82,7 @@ Add the following to your Claude Code settings (`~/.claude/settings.json`):
 
 > **Tip:** You can open `settings.json` quickly with `/config` inside Claude Code.
 
-### 3. Restart Claude Code
+#### 3. Restart Claude Code
 
 The statusline will appear at the bottom of your terminal session.
 
