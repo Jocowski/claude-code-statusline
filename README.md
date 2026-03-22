@@ -7,7 +7,7 @@ A custom statusline script for [Claude Code](https://claude.ai/code) that shows 
 ```
 [claude-sonnet-4-6] 📁 my-project | 🌿 main
 ████████░░ 78% of 200K | $0.42 (R$2,39) | ⏱️ 8m 15s
-cache: 62K read (81% hit) — input cacheado custa 90% menos
+cache: 62K read (81% hit)
 ```
 
 Three lines of information at a glance:
@@ -85,6 +85,19 @@ Add the following to your Claude Code settings (`~/.claude/settings.json`):
 #### 3. Restart Claude Code
 
 The statusline will appear at the bottom of your terminal session.
+
+## Compatibility
+
+This statusline is exclusive to **Claude Code** (the official Anthropic CLI). Other AI coding tools do not support custom statusline commands:
+
+| Tool | Statusline support |
+|---|---|
+| Claude Code | ✅ Supported |
+| Cursor | ❌ Not supported |
+| OpenAI Codex CLI | ❌ Not supported |
+| GitHub Copilot | ❌ Not supported |
+
+---
 
 ## Requirements
 

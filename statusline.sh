@@ -6,7 +6,7 @@
 # Mostra 3 linhas:
 #   1. [Modelo] 📁 diretório | 🌿 branch
 #   2. ████░░░░░░ 42% of 200K | $0.35 (R$2,03) | ⏱️ 12m 30s
-#   3. cache: 45K read (78% hit) — input cacheado custa 90% menos
+#   3. cache: 45K read (78% hit)
 
 input=$(cat)
 
@@ -120,4 +120,4 @@ if [ "$CACHE_PCT" -ge 70 ]; then CACHE_COLOR="$GREEN"
 elif [ "$CACHE_PCT" -ge 30 ]; then CACHE_COLOR="$YELLOW"
 else CACHE_COLOR="$RED"; fi
 
-echo -e "${DIM}cache:${RESET} ${CACHE_COLOR}${CACHE_FMT} read (${CACHE_PCT}% hit)${RESET} ${DIM}— input cacheado custa 90% menos${RESET}"
+echo -e "${DIM}cache:${RESET} ${CACHE_COLOR}${CACHE_FMT} read (${CACHE_PCT}% hit)${RESET}"
