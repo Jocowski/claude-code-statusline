@@ -15,6 +15,69 @@ Three lines of information at a glance:
 2. **Context window** progress bar + percentage + window size + cost (USD and BRL) + session duration
 3. **Prompt cache** hit rate and tokens read from cache
 
+## Customization (Windows / PowerShell version)
+
+The Windows script (`statusline.ps1`) separates customization into **3 independent axes**,
+so you can mix the information of one template with the look of another:
+
+1. **Fields** — *what* appears: `model`, `dir`, `branch`, `repo`, `ctx`, `ctx-mini`,
+   `gauges`, `cost`, `time`, `api`, `cache`, `lines`, `limits`, `pr`, `effort`,
+   `session`, `version`, `style`, `activity`
+2. **Layout** — *how* it is arranged: `lines`, `inline` (single line), `frame` (boxed),
+   `powerline`, `powerline-round` (the last two need a [Nerd Font](https://www.nerdfonts.com/))
+3. **Theme** — *colors*: `ansi`, Catppuccin `mocha` / `latte` / `frappe` / `macchiato`, `mono`
+
+The installer runs a 3-step wizard that previews every option with sample data.
+To change anything later (no reinstall needed):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File %USERPROFILE%\.claude\statusline.ps1 -Choose
+```
+
+### Templates
+
+Templates bundle the three axes as a starting point:
+
+| Template | What it shows |
+|---|---|
+| `minimal` | 1 line: model, mini context bar, cost, time |
+| `compact` | 2 lines: model + folder + branch / bar + cost (USD/BRL) + time |
+| `classic` | the original 3-line layout (default) |
+| `dashboard` | everything: context, cost, cache, lines ±, rate limits, PR, effort, API time, version |
+| `powerline` | colored background segments, Catppuccin Mocha |
+| `rounded` | powerline with rounded pill separators |
+| `limits` | context + 5h/7d rate-limit quotas with reset countdown (Pro/Max plans) |
+| `dev` | git/PR focused: repo owner/name, PR review state, lines changed |
+| `sparkline` | 1 line with tiny 1-char gauges for context/cache/limits |
+| `adaptive` | minimal by default, auto-expands lines when context ≥70%, limits ≥70%, cache hit <30% or agents are running |
+| `ascii` | pure ASCII glyphs — works on any console or font |
+
+Everything is stored in `%USERPROFILE%\.claude\statusline-config.json`. Edit the
+`fields` array there (lines of field ids) to fine-tune exactly what appears, e.g.:
+
+```json
+{
+  "layout": "powerline",
+  "theme": "mocha",
+  "fields": [["model", "dir", "branch"], ["ctx", "cost", "limits", "activity"]]
+}
+```
+
+### Live activity tracking (optional)
+
+The `activity` field shows a live **"how long has Claude been working on my request"**
+timer (⚡ 1m 23s) and the **number/type of subagents running** (🤖 2 (Explore, Plan)),
+turning into ✔ + total duration when the turn finishes. Claude Code doesn't expose
+this in the statusline payload, so the installer (optionally) registers
+`statusline-hooks.ps1` for the `UserPromptSubmit`, `Stop`, `SubagentStart`,
+`SubagentStop` and `SessionEnd` hook events — it keeps tiny per-session state files in
+`%TEMP%\claude-statusline` — and sets `statusLine.refreshInterval: 2` so the timer
+stays live. Each refresh spawns a PowerShell process (~0.5s wall time on a typical
+machine), so if you keep many sessions open at once you can raise the interval in
+`settings.json`; if you remove it, the statusline still updates after every message,
+the timer just won't tick in between. State files are keyed by `session_id` and hook
+writes are mutex-serialized, so concurrent sessions and parallel subagents don't clash.
+
 ## Features
 
 - Context window usage bar (green → yellow → red as you approach the limit)
@@ -39,6 +102,19 @@ This will:
 4. Print confirmation — just restart Claude Code
 
 > **Requires:** `jq` — install with `brew install jq` (macOS) or `sudo apt install jq` (Linux)
+
+### Windows (PowerShell)
+
+Clone the repo and double-click `install.bat`, or run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1
+```
+
+This copies `statusline.ps1` and `statusline-hooks.ps1` to `%USERPROFILE%\.claude\`,
+patches `settings.json`, asks whether to enable live activity tracking, then runs a
+3-step wizard (fields → layout → theme) with live previews of every option.
+No jq or Git Bash required. To remove everything, run `uninstall.bat`.
 
 ---
 
